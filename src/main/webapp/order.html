@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="css/order.css" rel="stylesheet">
+</head>
+
+<body>
+<div id="app">
+    <h1>我的订单</h1>
+    <div class="link">
+        <a href="http://localhost:8080/shopping/login.html">首页</a>
+        >>
+        <a href="http://localhost:8080/shopping/index.html">商品展示</a>
+        >>
+        <a href="http://localhost:8080/shopping/cart.html">我的购物车</a>
+    </div>
+    <hr>
+
+    <table>
+        <thead>
+          <tr>
+              <th>订单号</th>
+              <th>总价</th>
+              <th>状态</th>
+              <th>订单详情</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="item in orders" :key="item.id">
+              <td>{{item.orderId}}</td>
+              <td>￥{{item.totalPrice}}</td>
+              <td v-if="item.state===0">未发货</td>
+              <td v-else>已发货</td>
+              <td>
+                  <button class="order-detail-btn" @click="getOrderDetail(item.id)">查看详情</button>
+              </td>
+          </tr>
+        </tbody>
+    </table>
+</div>
+
+<script src="js/vue.js"></script>
+<script src="js/axios-0.18.0.js"></script>
+
+<script>
+    new Vue({
+        el: '#app',
+        data() {
+            return {
+                orders: []
+            }
+        },
+        created() {
+            axios.get('http://localhost:8080/shopping/order/showUserOrders')
+                .then(response => {
+                    if (Array.isArray(response.data)) {
+                        this.orders = response.data
+                    }
+                })
+        },
+        methods: {
+            getOrderDetail(id) {
+                location.href = `http://localhost:8080/shopping/orderItem.html?id=${id}`
+            }
+        }
+    })
+</script>
+</body>
+
+</html>

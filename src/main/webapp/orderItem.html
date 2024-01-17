@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="css/orderItem.css" rel="stylesheet">
+</head>
+
+<body>
+<div id="app">
+    <h1>订单详情</h1>
+    <div class="link">
+        <a href="http://localhost:8080/shopping/login.html">首页</a>
+        >>
+        <a href="http://localhost:8080/shopping/index.html">商品展示</a>
+        >>
+        <a href="http://localhost:8080/shopping/cart.html">我的购物车</a>
+        >>
+        <a href="http://localhost:8080/shopping/order.html">我的订单</a>
+    </div>
+    <hr>
+
+    <table>
+        <thead>
+            <tr>
+                <th>商品</th>
+                <th>商品单价</th>
+                <th>商品数量</th>
+                <th>商品总价</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-for="item in orderItems" :key="item.cartId">
+                <td class="name-picture">
+                    <img :src="'imgs/'+item.picture">
+                    <span class="name">{{item.name}}</span>
+                </td>
+                <td>￥{{item.price}}</td>
+                <td>{{item.count}}</td>
+                <td>￥{{item.totalPrice}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<script src="js/vue.js"></script>
+<script src="js/axios-0.18.0.js"></script>
+
+<script>
+    new Vue({
+        el: '#app',
+        data() {
+            return {
+                orderItems: []
+            }
+        },
+        created() {
+            const search = location.search.slice(1)
+            const params = search.split('=')
+            const id = params[1]
+            axios.get(`http://localhost:8080/shopping/orderItem/selectAll?id=${id}`)
+                .then(response => {
+                    if (Array.isArray(response.data)) {
+                        this.orderItems = response.data
+                    }
+                })
+        }
+    })
+</script>
+</body>
+
+</html>

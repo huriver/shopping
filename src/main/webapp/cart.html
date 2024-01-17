@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="css/cart.css" rel="stylesheet">
+</head>
+
+<body>
+<div id="app">
+    <h1>我的购物车</h1>
+    <div class="link">
+        <a href="http://localhost:8080/shopping/login.html">首页</a>
+        >>
+        <a href="http://localhost:8080/shopping/index.html">商品展示</a>
+    </div>
+    <hr>
+
+    <table>
+        <thead>
+            <tr>
+                <th>商品</th>
+                <th>商品单价</th>
+                <th>购买数量</th>
+                <th>商品价格</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-for="item in carts" :key="item.cartId">
+                <td class="name-picture">
+                    <img :src="'imgs/'+item.picture">
+                    <span class="name">{{item.name}}</span>
+                </td>
+                <td>￥{{item.price}}</td>
+                <td>{{item.count}}</td>
+                <td>￥{{item.totalPrice}}</td>
+                <td>
+                    <button class="delete-btn" @click="confirmDelete(item.cartId)">删除</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- 总价 -->
+    <div class="footer">
+        <div class="order-btns">
+            <button class="order-btn" @click="addOrder">提交订单</button>
+            <button class="order-btn" @click="gotoOrder">查看订单</button>
+        </div>
+        <div class="totalPrice">总价：<i>￥{{totalPrice}}</i></div>
+    </div>
+
+
+    <!-- 弹框 -->
+    <div :class="{dialog:true,active:isActive}">
+        <div class="title">提示</div>
+        <div class="message">确认要删除购物车中的该商品吗？</div>
+        <div class="btns">
+            <button class="confirm btn" @click="deleteCart">确认</button>
+            <button class="cancel btn" @click="isActive=false">取消</button>
+        </div>
+    </div>
+</div>
+
+<script src="js/vue.js"></script>
+<script src="js/axios-0.18.0.js"></script>
+
+<script>
+    new Vue({
+        el: '#app',
+        data() {
+            return {
+                carts: [],
+                isActive: false
+            }
+        },
+        created() {
+            this.getCarts()
+        },
+        // 计算属性：统计总价
+        computed: {
+            totalPrice() {
+                return this.carts.reduce((total, current) => current.totalPrice + total, 0)
+            }
+        },
+        methods: {
+            // 获取购物车数据
+            getCarts() {
+                axios.get('http://localhost:8080/shopping/cart/selectAll')
+                    .then(response => {
+                        if (Array.isArray(response.data)) {
+                            response.data.forEach(item => {
+                                item.totalPrice = item.price * item.count
+                            })
+                            this.carts = response.data
+                        }
+                    })
+            },
+            // 准备删除
+            confirmDelete(id) {
+                this.isActive = true
+                this.deleteId = id
+            },
+            // 删除
+            deleteCart() {
+                axios.get(`http://localhost:8080/shopping/cart/deleteFromCart?id=${this.deleteId}`)
+                    .then(response => {
+                        if (response.data === 'success') {
+                            // 重新加载数据
+                            this.getCarts()
+                            this.isActive = false
+                        }
+                    })
+            },
+            // 查询订单
+            gotoOrder() {
+                location.href = 'http://localhost:8080/shopping/order.html'
+            },
+            // 提交订单
+            addOrder() {
+                axios.post('http://localhost:8080/shopping/order/submitUserOrders', {
+                    totalPrice: this.totalPrice,
+                    cartList: this.carts
+                })
+                    .then(response => {
+                        // 重新加载数据
+                        this.getCarts()
+                    })
+            }
+
+        }
+    })
+</script>
+</body>
+
+</html>

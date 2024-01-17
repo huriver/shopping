@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>欢迎注册</title>
+    <link href="css/register.css" rel="stylesheet">
+</head>
+
+<body>
+<div id="app">
+    <div class="form-div">
+        <div class="reg-content">
+            <h1>欢迎注册</h1>
+            <span>已有帐号？</span> <a href="login.html">登录</a>
+        </div>
+        <form @submit.prevent="register" id="reg-form">
+
+            <table>
+
+                <tr>
+                    <td>用户名:</td>
+                    <td class="inputs">
+                        <input v-model="username" type="text" @blur="checkUsernameExists">
+                        <br>
+                        <span id="username_err" class="err_msg">{{registerMsg}}</span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>密&nbsp;&nbsp;&nbsp;码:</td>
+                    <td class="inputs">
+                        <input v-model="password" type="password" @blur="checkPasswordExists">
+                        <br>
+                        <span id="password_err" class="err_msg">{{passwordMsg}}</span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>验证码:</td>
+                    <td class="inputs">
+                        <input id="checkCodeIpt" v-model="checkCode" type="text">
+                        <img id="changeCodeImg" @click="changeCode">
+                        <a href="#" @click.prevent="changeCode">看不清？</a>
+                    </td>
+                </tr>
+
+            </table>
+
+            <div class="buttons">
+                <input value="注 册" type="submit" id="reg_btn">
+            </div>
+            <br class="clear">
+        </form>
+    </div>
+</div>
+
+<script src="js/vue.js"></script>
+<script src="js/axios-0.18.0.js"></script>
+
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            username: '',
+            password: '',
+            checkCode: '',
+            registerMsg: '',
+            passwordMsg: '',
+            usernameExists: false  // 新增变量用于存储用户名是否已存在的状态
+        },
+        created() {
+            document.getElementById("changeCodeImg").src = "/shopping/checkCodeServlet?" + new Date().getMilliseconds();
+        },
+        methods: {
+            register() {
+                axios.post("/shopping/user/register", {
+                    username: this.username,
+                    password: this.password,
+                    checkCode: this.checkCode
+                })
+                    .then(response => {
+                        if (response.data === "验证码错误") {
+                            this.registerMsg = "验证码错误";
+                        } else if (response.data === "注册成功，请登录") {
+                            location.href = "http://localhost:8080/shopping/login.html";
+                        }
+
+                    })
+                    .catch(error => {
+                        console.error('注册过程中的错误:', error);
+                    });
+            },
+            changeCode() {
+                document.getElementById("changeCodeImg").src = "/shopping/checkCodeServlet?" + new Date().getMilliseconds();
+            },
+            checkUsernameExists() {
+                axios.get("/shopping/user/selectByUsername?username=" + this.username)
+                    .then(response => {
+                        this.registerMsg = response.data;
+                    })
+            },
+            checkPasswordExists() {
+                if (this.password === "") {
+                    this.passwordMsg = "密码不能为空";
+                } else {
+                    this.passwordMsg = "";
+                }
+            }
+        }
+    });
+</script>
+</body>
+
+</html>

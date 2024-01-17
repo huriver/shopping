@@ -1,0 +1,123 @@
+.link a {
+    color: #000;
+    text-decoration: none;
+    font-size: 18px;
+    margin: 10px;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 20px;
+}
+
+th,
+td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+.name-picture {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+tr:hover {
+    background-color: #f5f5f5;
+}
+
+.delete-btn {
+    background-color: #ff6666;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+img {
+    width: 100px;
+    margin-right: 10px;
+}
+
+/* 弹框 */
+.dialog {
+    box-sizing: border-box;
+    position: fixed;
+    display: none;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 400px;
+    height: 200px;
+    background-color: rgb(214, 234, 243);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+}
+
+.dialog.active {
+    display: flex;
+}
+
+.dialog .title {
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.dialog .message {
+    font-size: 18px;
+}
+
+button {
+    margin: 0;
+    padding: 0;
+    border: 1px solid transparent;
+    outline: none;
+}
+
+.btn {
+    cursor: pointer;
+    padding: 7px;
+    background-color: skyblue;
+    border-radius: 4px;
+    margin-right: 10px;
+}
+
+.totalPrice {
+    font-size: 24px;
+    margin: 40px;
+    float: right;
+}
+
+.totalPrice i {
+    color: crimson;
+}
+
+.footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* 订单按钮 */
+.order-btn {
+    cursor: pointer;
+    padding: 10px;
+    background-color: chocolate;
+    color: #fff;
+    border-radius: 10px;
+    font-size: 18px;
+}

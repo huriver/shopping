@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="css/index.css" rel="stylesheet">
+</head>
+
+<body>
+<div id="app">
+    <h1>商品展示</h1>
+    <div class="link">
+        <a href="http://localhost:8080/shopping/login.html">首页</a>
+        >>
+        <a href="http://localhost:8080/shopping/cart.html">我的购物车</a>
+        >>
+        <a href="http://localhost:8080/shopping/order.html">我的订单</a>
+    </div>
+    <hr>
+    <div class="container">
+        <div v-for="item in goodsList" :key="item.id" class="goods" @click="gotoDetail(item.id)">
+            <img :src="'imgs/'+item.picture" class="img item">
+            <div class="name item">{{item.name}}</div>
+            <div class="price item"><i>￥{{item.price}}</i></div>
+        </div>
+    </div>
+</div>
+
+<script src="js/vue.js"></script>
+<script src="js/axios-0.18.0.js"></script>
+
+<script>
+    new Vue({
+        el: '#app',
+        data() {
+            return {
+                goodsList: []
+            }
+        },
+        created() {
+            axios.get('http://localhost:8080/shopping/goods/selectAll')
+                .then(response => {
+                    if (Array.isArray(response.data)) {
+                        this.goodsList = response.data;
+                        /*console.log("从后端请求index.html")
+                        console.log("====index.html=========");*/
+                        console.log("从后端请求index.html")
+                        console.log("====index.html=========");
+                    }
+                })
+        },
+        methods: {
+            gotoDetail(id) {
+                location.href = `http://localhost:8080/shopping/detail.html?id=${id}`
+            }
+        }
+
+    })
+</script>
+</body>
+
+</html>

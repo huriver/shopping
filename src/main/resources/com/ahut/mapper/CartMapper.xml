@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ahut.mapper.CartMapper">
+
+    <resultMap id="cartResultMap" type="cart">
+        <result column="goods_id" property="goodsId"/>
+        <result column="cart_id" property="cartId"/>
+        <result column="user_id" property="userId"/>
+    </resultMap>
+
+    <select id="selectAll" resultMap="cartResultMap">
+        select c.* ,g.name as name, g.price as price,g.picture as picture
+        from cart as c left join goods g on g.id = c.goods_id
+        where user_id=#{id}
+    </select>
+
+</mapper>

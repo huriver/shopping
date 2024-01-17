@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ahut.mapper.OrderMapper">
+
+    <resultMap id="orderResultMap" type="order">
+        <result column="order_id" property="orderId"/>
+        <result column="total_price" property="totalPrice"/>
+        <result column="user_id" property="userId"/>
+    </resultMap>
+
+    <select id="selectByUserId" resultMap="orderResultMap">
+        select *
+        from `order`
+        where user_id = #{id};
+    </select>
+
+    <insert id="add" useGeneratedKeys="true" keyProperty="id">
+        insert into `order` (order_id, total_price, user_id, state)
+        values (#{orderId}, #{totalPrice}, #{userId}, #{state});
+    </insert>
+
+
+</mapper>

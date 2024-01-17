@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="css/detail.css" rel="stylesheet">
+</head>
+
+<body>
+<div id="app">
+    <h1>商品详情</h1>
+    <div class="link">
+        <a href="http://localhost:8080/shopping/login.html">首页</a>
+        >>
+        <a href="http://localhost:8080/shopping/index.html">商品展示</a>
+    </div>
+    <hr>
+    <div class="box">
+        <div class="container">
+            <img v-if="goods.picture" :src="'imgs/'+goods.picture" class="img">
+            <div class="text">
+                <div class="name item">{{goods.name}}</div>
+                <div class="price item"><i>￥{{goods.price}}</i></div>
+                <div class="item">
+                    <span>库存：</span>
+                    <div class="number">{{goods.number}}</div>
+                </div>
+                <div class="item">
+                    <span>产地：</span>
+                    <div class="city">{{goods.city}}</div>
+                </div>
+                <div class="item">
+                    <span>购买数量：</span>
+                    <input type="number" v-model="cart.count" min="1" max="99">
+                </div>
+                <div class="item btns">
+                    <button class="pay btn">立即购买</button>
+                    <button class="addToCart btn" @click="addToCart">加入购物车</button>
+                    <button class="showCart btn" @click="gotoCart">查询购物车</button>
+                </div>
+            </div>
+        </div>
+        <div class="looked">
+            <h2>我的足迹</h2>
+            <div class="list">
+                <div v-for="(item, index) in looked" :key="index" class="item">
+                    <img :src="'imgs/'+item.picture" width="200px">
+                    <div class="description">
+                        <div class="name item">{{item.name}}</div>
+                        <div class="price item"><i>￥{{item.price}}</i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- message弹框 -->
+    <div :class="{message:true,active:isActive}" ref="message">{{message}}</div>
+</div>
+
+<script src="js/vue.js"></script>
+<script src="js/axios-0.18.0.js"></script>
+
+<script>
+    new Vue({
+        el: '#app',
+        data() {
+            return {
+                cart: {
+                    goodsId: null,
+                    count: 1
+                },
+                isActive: false,
+                message: '',
+                goods: {},
+                looked: {}
+            }
+        },
+        created() {
+            // 加载浏览足迹
+            const userId = localStorage.getItem('userId')
+            let looked = localStorage.getItem('looked') ? JSON.parse(localStorage.getItem('looked')) : {}
+            this.looked = !looked[userId] ? [] : looked[userId]
+
+            const search = location.search.slice(1)
+            const params = search.split('=')
+            const id = params[1]
+            this.cart.goodsId = id
+
+            axios.get(`http://localhost:8080/shopping/goods/selectById?id=${id}`)
+                .then(response => {
+                    this.goods = response.data
+                    // 加入浏览足迹
+                    this.looked.unshift(this.goods)
+                    // 最多保存5个
+                    this.looked.length > 5 ? this.looked.pop() : this.looked
+                    looked[userId] = this.looked
+                    // 保存到浏览器本地
+                    localStorage.setItem('looked', JSON.stringify(looked))
+                })
+        },
+        methods: {
+            gotoCart() {
+                location.href = 'http://localhost:8080/shopping/cart.html'
+            },
+            addToCart() {
+                axios.post('http://localhost:8080/shopping/cart/addToCart', this.cart)
+                    .then(response => {
+                        if (response.data === 'success') {
+                            this.showMessage('成功加入购物车')
+                        } else {
+                            this.showMessage('加入购物车失败')
+                        }
+                    })
+            },
+            // 展示弹框
+            showMessage(message) {
+                this.message = message
+                this.isActive = true
+                setTimeout(() => {
+                    this.isActive = false
+                }, 3000)
+            }
+        }
+    })
+</script>
+</body>
+
+</html>

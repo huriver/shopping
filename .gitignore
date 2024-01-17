@@ -1,0 +1,36 @@
+#Created by .ignore support plugin (hsz.mobi)
+###Java tempLate
+*.class
+
+#MobiLe Tools for Java (J2ME)
+.mtj.tmp/
+
+#Package Files #
+*.jar
+*.war
+*.ear
+*.zip
+
+# virtual machine crash logs, see http://www.java.com/en/downLoad/heLp/error_hotspot.xmL
+hs_err_pid*
+
+.idea
+
+*.iml
+
+
+*.bak
+*.class
+*.rar
+*.1og
+.project
+.settings
+.classpath
+target
+classes
+lib
+*.DS_store
+.gradle
+build
+out
+log

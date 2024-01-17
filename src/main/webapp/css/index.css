@@ -1,0 +1,45 @@
+/* 链接 */
+.link a {
+    color: #000;
+    text-decoration: none;
+    font-size: 18px;
+    margin: 10px;
+}
+
+.container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.container .item {
+    margin-top: 10px;
+}
+
+.container .goods {
+    margin: 15px;
+    padding: 20px 20px;
+    width: 250px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    transition: transform 0.3s ease-in-out;
+    cursor: pointer;
+}
+
+.container .goods:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.1);
+    transform: scale(1.05);
+}
+
+.container .name {
+    font-weight: 700;
+    font-size: 22px;
+}
+
+.container .img {
+    width: 250px;
+}
+
+.container .price {
+    color: crimson;
+    font-size: 20px;
+}

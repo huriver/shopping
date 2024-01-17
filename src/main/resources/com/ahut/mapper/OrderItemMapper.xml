@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ahut.mapper.OrderItemMapper">
+
+    <resultMap id="orderItemResultMap" type="orderItem">
+        <result column="order_id" property="orderId"/>
+        <result column="goods_id" property="goodsId"/>
+        <result column="total_price" property="totalPrice"/>
+    </resultMap>
+
+    <select id="selectAll" resultMap="orderItemResultMap">
+        select o.*,g.name as name,g.price as price,g.picture as picture
+        from order_item as o left join goods g on g.id = o.goods_id
+        where order_id = #{orderId};
+    </select>
+
+
+</mapper>

@@ -1,0 +1,105 @@
+.link a {
+    color: #000;
+    text-decoration: none;
+    font-size: 18px;
+    margin: 10px;
+}
+
+.box {
+    display: flex;
+    justify-content: space-around;
+}
+
+.container {
+    display: flex;
+    height: 450px;
+}
+
+.item {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+}
+
+.container .img {
+    margin-right: 20px;
+}
+
+.container .name {
+    font-weight: 700;
+    font-size: 28px;
+}
+
+.container .price {
+    color: crimson;
+    font-size: 24px;
+}
+
+.container .btns {
+    display: flex;
+}
+
+.container img {
+    width: 450px;
+}
+
+button {
+    margin: 0;
+    padding: 0;
+    border: 1px solid transparent;
+    outline: none;
+}
+
+.btn {
+    cursor: pointer;
+    margin: 110px 10px 0 0;
+    padding: 10px;
+    background-color: chocolate;
+    color: #fff;
+    border-radius: 10px;
+    font-size: 18px;
+}
+
+.item input {
+    width: 100px;
+    height: 40px;
+    font-size: 18px;
+}
+
+.looked {
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+
+.looked h2 {
+    text-align: center;
+}
+
+.looked .list img {
+    margin-right: 10px;
+}
+
+/* 弹框 */
+.message {
+    width: 250px;
+    height: 60px;
+    position: fixed;
+    top: -60px;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: all .5s;
+    border-radius: 10px;
+    text-align: center;
+    line-height: 60px;
+    background-color: chocolate;
+    color: #fff;
+    font-size: 20px;
+}
+
+.message.active {
+    top: 20px;
+}

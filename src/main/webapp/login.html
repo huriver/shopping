@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>login</title>
+    <link href="css/login.css" rel="stylesheet">
+    <style>
+        #app {
+            width: 37%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 380px;
+            background-color: rgba(75, 81, 95, 0.3);
+            box-shadow: 7px 7px 17px rgba(52, 56, 66, 0.5);
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+<div id="app" style="height: 350px">
+    <form @submit.prevent="login" id="form">
+        <h1 id="loginMsg">LOGIN IN</h1>
+        <div id="errorMsg">{{loginMsg}}</div>
+        <p>用户名: <input v-model="username" type="text" id="username"></p>
+        <p>密&nbsp;&nbsp;&nbsp;码: <input v-model="password" type="password" id="password"></p>
+        <p>记住我: <input v-model="remember" type="checkbox" id="remember"></p>
+
+        <div id="subDiv">
+            <input type="submit" class="button" value="登录">
+            <input type="reset" class="button" value="重置">&nbsp;&nbsp;&nbsp;
+            <a href="register.html">没有账号？</a>
+        </div>
+    </form>
+</div>
+
+<script src="js/vue.js"></script>
+<script src="js/axios-0.18.0.js"></script>
+
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            username: '',
+            password: '',
+            remember: false,
+            loginMsg: ''
+        },
+        created() {
+            const cookies = document.cookie.split(';').map(cookie => cookie.split('='));
+
+            for (const [key, value] of cookies) {
+                if (key.trim() === 'username') {
+                    this.username = value;
+                } else if (key.trim() === 'password') {
+                    this.password = value;
+                } else if (key.trim() === 'remember') {
+                    this.remember = value;
+                }
+            }
+            console.log("从后端请求login.html")
+            console.log(username,password);
+        },
+
+        methods: {
+            login() {
+                axios.post("http://localhost:8080/shopping/user/login", {
+                    username: this.username,
+                    password: this.password,
+                    remember: this.remember ? 1 : 0
+                }).then(response => {
+                    if (response.data === "用户名或密码错误") {
+                        this.loginMsg = response.data
+                        return
+                    }
+                    localStorage.setItem("userId",response.data)
+                    location.href = "http://localhost:8080/shopping/index.html"
+                });
+            }
+        }
+    });
+</script>
+</body>
+
+</html>
