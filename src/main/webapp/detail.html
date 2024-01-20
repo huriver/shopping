@@ -34,7 +34,7 @@
                 </div>
                 <div class="item">
                     <span>购买数量：</span>
-                    <input type="number" v-model="cart.count" min="1" max="99">
+                    <input type="number" @blur="checkCount" v-model="cart.count" :min="minCount" :max="goods.number">
                 </div>
                 <div class="item btns">
                     <button class="pay btn">立即购买</button>
@@ -71,8 +71,9 @@
             return {
                 cart: {
                     goodsId: null,
-                    count: 1
+                    count: null
                 },
+                minCount: 1,  // 购买数量下限
                 isActive: false,
                 message: '',
                 goods: {},
@@ -100,21 +101,53 @@
                     looked[userId] = this.looked
                     // 保存到浏览器本地
                     localStorage.setItem('looked', JSON.stringify(looked))
+
+                    if (this.goods.number == 0) {
+                        this.cart.count = 0;    //购买数量初始值
+                        this.minCount = 0;
+                    } else {
+                        this.cart.count = 1;    //购买数量初始值
+                        this.minCount = 1;
+                    }
                 })
         },
         methods: {
+            checkCount() {
+                this.cart.count = Number(this.cart.count);
+                // 当商品库存为0时，购买数量应始终为0
+                if (this.goods.number == 0) {
+                    this.cart.count = 0;
+                }
+                if (this.goods.number != 0 && this.cart.count < 1) {
+                    this.cart.count = this.minCount;
+                }
+                if (this.goods.number != 0 && this.cart.count > this.goods.number) {
+                    this.cart.count = this.goods.number;
+                }
+            },
             gotoCart() {
                 location.href = 'http://localhost:8080/shopping/cart.html'
             },
             addToCart() {
-                axios.post('http://localhost:8080/shopping/cart/addToCart', this.cart)
-                    .then(response => {
-                        if (response.data === 'success') {
-                            this.showMessage('成功加入购物车')
-                        } else {
-                            this.showMessage('加入购物车失败')
-                        }
-                    })
+                console.log(this.cart.count, typeof this.cart.count);
+                if (this.goods.number == 0) {
+                    this.showMessage('商品库存不足，无法加入购物车');
+                }
+                // 购买数量不是整数时，不进行添加到购物车的操作
+                else if (!Number.isInteger(this.cart.count)) {
+                    this.showMessage('购买数量必须为整数');
+                } else if (this.cart.count == 0) {
+                    this.showMessage('购买数量不能为0，无法加入购物车');
+                } else {
+                    axios.post('http://localhost:8080/shopping/cart/addToCart', this.cart)
+                        .then(response => {
+                            if (response.data === 'success') {
+                                this.showMessage('成功加入购物车');
+                            } else {
+                                this.showMessage('加入购物车失败');
+                            }
+                        });
+                }
             },
             // 展示弹框
             showMessage(message) {

@@ -1,6 +1,8 @@
 package com.ahut.service.impl;
 
+import com.ahut.mapper.CartMapper;
 import com.ahut.mapper.GoodsMapper;
+import com.ahut.pojo.Cart;
 import com.ahut.pojo.Goods;
 import com.ahut.service.GoodsService;
 import com.ahut.util.SqlSessionFactoryUtils;
@@ -33,6 +35,18 @@ public class GoodsServiceImpl implements GoodsService {
 
         sqlSession.close();
         return goods;
+    }
+
+    @Override
+    public void updateCount(Cart cart) {
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+
+        GoodsMapper mapper = sqlSession.getMapper(GoodsMapper.class);
+        int number = mapper.selectById(cart.getGoodsId()).getNumber() - cart.getCount();
+
+        mapper.updateById(cart.getGoodsId(), number);
+        sqlSession.commit();
+        sqlSession.close();
     }
 
 }

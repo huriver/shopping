@@ -3,9 +3,11 @@ package com.ahut.web.servlet;
 import com.ahut.pojo.*;
 import com.ahut.pojo.dto.OrderDTO;
 import com.ahut.service.CartService;
+import com.ahut.service.GoodsService;
 import com.ahut.service.OrderItemService;
 import com.ahut.service.OrderService;
 import com.ahut.service.impl.CartServiceImpl;
+import com.ahut.service.impl.GoodsServiceImpl;
 import com.ahut.service.impl.OrderItemServiceImpl;
 import com.ahut.service.impl.OrderServiceImpl;
 import com.ahut.util.IdUtils;
@@ -19,10 +21,18 @@ import java.util.List;
 
 @WebServlet("/order/*")
 public class OrderServlet extends BaseServlet {
+    private GoodsService goodsService = new GoodsServiceImpl();
     private OrderService orderService = new OrderServiceImpl();
     private OrderItemService orderItemService = new OrderItemServiceImpl();
     private CartService cartService = new CartServiceImpl();
 
+    /**
+     * 展示用户订单
+     *
+     * @param request
+     * @param response
+     * @throws Exception
+     */
     public void showUserOrders(HttpServletRequest request, HttpServletResponse response) throws Exception {
 //        判断用户是否登录：如果还没登录，则转向登录页面
         HttpSession session = request.getSession();
@@ -40,6 +50,13 @@ public class OrderServlet extends BaseServlet {
         response.getWriter().write(jsonString);
     }
 
+    /**
+     * 提交用户订单
+     *
+     * @param request
+     * @param response
+     * @throws Exception
+     */
     public void submitUserOrders(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         //判断用户是否登录：如果还没登录，则转向登录页面
@@ -71,14 +88,12 @@ public class OrderServlet extends BaseServlet {
             orderItem.setCount(cart.getCount());
             orderItem.setTotalPrice(cart.getPrice() * cart.getCount());
             orderItemService.add(orderItem);
+            goodsService.updateCount(cart);
         }
 
         cartService.deleteByUserId(userId);
-
-
         response.setContentType("text/json;charset=UTF-8");
         response.getWriter().write("提交用户订单成功");
-
     }
 
 
