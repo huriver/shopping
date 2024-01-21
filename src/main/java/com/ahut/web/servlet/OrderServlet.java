@@ -39,11 +39,6 @@ public class OrderServlet extends BaseServlet {
         User user = (User) session.getAttribute("user");
         response.setContentType("text/json;charset=UTF-8");
 
-        if (user == null) {
-            response.getWriter().write("用户未登录");
-            return;
-        }
-
         //查询某个用户的所有订单
         List<Order> OrdersList = orderService.selectOrdersByUserId(user.getId());
         String jsonString = JSON.toJSONString(OrdersList);
