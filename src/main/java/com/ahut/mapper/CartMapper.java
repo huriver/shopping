@@ -20,6 +20,6 @@ public interface CartMapper {
     @Delete("delete from cart where user_id=#{userId};")
     void deleteByUserId(int userId);
 
-    @Update("update cart set count = #{count} where user_id = #{userId};")
+    @Update("update cart set count = #{count} where cart_id=#{cartId};")
     void updateById(Cart cart);
 }
