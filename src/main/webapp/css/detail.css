@@ -85,7 +85,7 @@ button {
 
 /* 弹框 */
 .message {
-    width: 350px;
+    width: 520px;
     height: 60px;
     position: fixed;
     top: -60px;

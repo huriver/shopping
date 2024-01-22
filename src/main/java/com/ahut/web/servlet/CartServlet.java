@@ -1,10 +1,13 @@
 package com.ahut.web.servlet;
 
 import com.ahut.pojo.Cart;
+import com.ahut.pojo.Goods;
 import com.ahut.pojo.dto.CartDTO;
 import com.ahut.pojo.User;
 import com.ahut.service.CartService;
+import com.ahut.service.GoodsService;
 import com.ahut.service.impl.CartServiceImpl;
+import com.ahut.service.impl.GoodsServiceImpl;
 import com.alibaba.fastjson.JSON;
 
 import javax.servlet.annotation.WebServlet;
@@ -16,6 +19,7 @@ import java.util.List;
 @WebServlet("/cart/*")
 public class CartServlet extends BaseServlet {
     private CartService cartService = new CartServiceImpl();
+    private GoodsService goodsService=new GoodsServiceImpl();
 
     public void selectAll(HttpServletRequest request, HttpServletResponse response) throws Exception {
         HttpSession session = request.getSession();
@@ -43,10 +47,18 @@ public class CartServlet extends BaseServlet {
         User user = (User) session.getAttribute("user");
         int userId = user.getId();
 
+        //获取当前库存
+        Goods goods = goodsService.selectById(goodsId);
+        int currentStock = goods.getNumber();
+
         //遍历购物车数据，若goodsId曾经加入过购物车，则仅更改对应count即可
         List<Cart> cartList = cartService.selectAll(userId);
         for (Cart cart : cartList) {
             if (cart.getGoodsId() == goodsId) {
+                if (cart.getCount() + count > currentStock) {
+                    response.getWriter().write("购物车此商品不可超过库存上限，无法添加更多此商品");
+                    return;
+                }
                 cart.setCount(cart.getCount() + count);
                 //操作数据库持久化
                 cartService.update(cart);

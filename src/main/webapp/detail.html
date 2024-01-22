@@ -136,15 +136,15 @@
                 // 购买数量不是整数时，不进行添加到购物车的操作
                 else if (!Number.isInteger(this.cart.count)) {
                     this.showMessage('购买数量必须为整数');
-                } else if (this.cart.count == 0) {
-                    this.showMessage('购买数量不能为0，无法加入购物车');
                 } else {
                     axios.post('http://localhost:8080/shopping/cart/addToCart', this.cart)
                         .then(response => {
                             if (response.data === 'success') {
                                 this.showMessage('成功加入购物车');
-                            } else {
+                            } else if (response.data === 'failure') {
                                 this.showMessage('加入购物车失败');
+                            } else {
+                                this.showMessage('购物车此商品不可超过库存上限，无法添加更多此商品');
                             }
                         });
                 }
