@@ -52,18 +52,46 @@ public class OrderServlet extends BaseServlet {
      * @param response
      * @throws Exception
      */
-    public void submitUserOrders(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public synchronized void submitUserOrders(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-        //判断用户是否登录：如果还没登录，则转向登录页面
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
+        boolean invalid = false;
+        String invalidGoods = "";
 
+        //获取购物车前端数据
         request.setCharacterEncoding("UTF-8");
+        response.setContentType("text/json;charset=UTF-8");
         String params = request.getReader().readLine();
         OrderDTO orderDTO = JSON.parseObject(params, OrderDTO.class);
 
-        int totalPrice = orderDTO.getTotalPrice();
         List<Cart> cartList = orderDTO.getCartList();
+
+        //检查订单中购物车是否为空
+        if(cartList.isEmpty()){
+            response.getWriter().write("您的购物车当前为空，无法提交订单");
+            return;
+        }
+
+        //检查订单中购物车是否有效
+        for (Cart cart : cartList) {
+            Goods goods = goodsService.selectById(cart.getGoodsId());
+            int currentStock = goods.getNumber();
+
+            if (cart.getCount() > currentStock) {
+                invalid = true;
+                invalidGoods += goods.getName() + ",";
+            }
+        }
+
+        if (invalid) {
+            // 使用 substring 截取字符串，不包含最后一个字符
+            invalidGoods = invalidGoods.substring(0, invalidGoods.length() - 1);
+            response.getWriter().write("商品（" + invalidGoods + "）库存已不足，无法完成订单。请移除这些商品，重新加入购物车");
+            return;
+        }
+
+        int totalPrice = orderDTO.getTotalPrice();
         String orderId = IdUtils.genId();//自动生成：订单号
         int userId = user.getId();
 
@@ -87,8 +115,7 @@ public class OrderServlet extends BaseServlet {
         }
 
         cartService.deleteByUserId(userId);
-        response.setContentType("text/json;charset=UTF-8");
-        response.getWriter().write("提交用户订单成功");
+        response.getWriter().write("提交订单成功");
     }
 
 

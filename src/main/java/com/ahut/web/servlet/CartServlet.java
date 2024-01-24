@@ -34,7 +34,7 @@ public class CartServlet extends BaseServlet {
         response.getWriter().write(jsonString);
     }
 
-    public void addToCart(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public synchronized void addToCart(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String params = request.getReader().readLine();
         response.setContentType("text/json;charset=UTF-8");
         //获取前端传来要加入购物车的goodsId和count
