@@ -129,7 +129,6 @@
                 location.href = 'http://localhost:8080/shopping/cart.html'
             },
             addToCart() {
-                console.log(this.cart.count, typeof this.cart.count);
                 if (this.goods.number == 0) {
                     this.showMessage('商品库存不足，无法加入购物车');
                 }
@@ -139,13 +138,7 @@
                 } else {
                     axios.post('http://localhost:8080/shopping/cart/addToCart', this.cart)
                         .then(response => {
-                            if (response.data === 'success') {
-                                this.showMessage('成功加入购物车');
-                            } else if (response.data === 'failure') {
-                                this.showMessage('加入购物车失败');
-                            } else {
-                                this.showMessage('购物车此商品不可超过库存上限，无法添加更多此商品');
-                            }
+                            this.showMessage(response.data);
                         });
                 }
             },

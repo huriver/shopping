@@ -56,14 +56,17 @@
 
 
     <!-- 弹框 -->
-    <div :class="{dialog:true,active:isActive}">
+    <div :class="{dialog:true,activeDe:isActiveDe}">
         <div class="title">提示</div>
-        <div class="message">确认要删除购物车中的该商品吗？</div>
+        <div class="messageDe">确认要删除购物车中的该商品吗？</div>
         <div class="btns">
             <button class="confirm btn" @click="deleteCart">确认</button>
-            <button class="cancel btn" @click="isActive=false">取消</button>
+            <button class="cancel btn" @click="isActiveDe=false">取消</button>
         </div>
     </div>
+
+    <!-- message弹框 -->
+    <div :class="{message:true,active:isActive}" ref="message">{{message}}</div>
 </div>
 
 <script src="js/vue.js"></script>
@@ -75,7 +78,9 @@
         data() {
             return {
                 carts: [],
-                isActive: false
+                isActiveDe: false,
+                isActive: false,
+                message: ''
             }
         },
         created() {
@@ -102,7 +107,7 @@
             },
             // 准备删除
             confirmDelete(id) {
-                this.isActive = true
+                this.isActiveDe = true
                 this.deleteId = id
             },
             // 删除
@@ -112,7 +117,7 @@
                         if (response.data === 'success') {
                             // 重新加载数据
                             this.getCarts()
-                            this.isActive = false
+                            this.isActiveDe = false
                         }
                     })
             },
@@ -127,9 +132,20 @@
                     cartList: this.carts
                 })
                     .then(response => {
-                        // 重新加载数据
-                        this.getCarts()
+                        this.showMessage(response.data);
+                        // 提交订单成功后，重新加载购物车数据
+                        if (response.data === '提交订单成功') {
+                            this.getCarts();
+                        }
                     })
+            },
+            // 展示弹框
+            showMessage(message) {
+                this.message = message
+                this.isActive = true
+                setTimeout(() => {
+                    this.isActive = false
+                }, 4000)
             }
 
         }

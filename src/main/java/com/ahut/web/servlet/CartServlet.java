@@ -36,11 +36,11 @@ public class CartServlet extends BaseServlet {
 
     public void addToCart(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String params = request.getReader().readLine();
+        response.setContentType("text/json;charset=UTF-8");
         //获取前端传来要加入购物车的goodsId和count
         CartDTO cartDTO = JSON.parseObject(params, CartDTO.class);
         int goodsId = cartDTO.getGoodsId();
         int count = cartDTO.getCount();
-        System.out.println(count);
 
         //获取当前用户的购物车数据
         HttpSession session = request.getSession();
@@ -62,24 +62,23 @@ public class CartServlet extends BaseServlet {
                 cart.setCount(cart.getCount() + count);
                 //操作数据库持久化
                 cartService.update(cart);
-                response.getWriter().write("success");
+                response.getWriter().write("成功加入购物车");
                 return;
             }
         }
 
-        //若没有加入过，则加入购物车
+        //若goodsId没有加入过，则加入购物车
         Cart cart = new Cart();
         cart.setGoodsId(goodsId);
         cart.setCount(count);
         cart.setUserId(userId);
-        response.setContentType("text/json;charset=UTF-8");
 
         try {
             cartService.add(cart);
-            response.getWriter().write("success");
+            response.getWriter().write("成功加入购物车");
         } catch (Exception e) {
             e.printStackTrace();
-            response.getWriter().write("failure");
+            response.getWriter().write("加入购物车失败");
         }
 
     }
