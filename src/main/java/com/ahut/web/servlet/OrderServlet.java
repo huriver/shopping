@@ -55,6 +55,9 @@ public class OrderServlet extends BaseServlet {
     public synchronized void submitUserOrders(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         HttpSession session = request.getSession();
+        //获取buyNowFlag标志
+        String buyNowFlag = request.getParameter("buyNowFlag");
+
         User user = (User) session.getAttribute("user");
         boolean invalid = false;
         String invalidGoods = "";
@@ -68,7 +71,7 @@ public class OrderServlet extends BaseServlet {
         List<Cart> cartList = orderDTO.getCartList();
 
         //检查订单中购物车是否为空
-        if(cartList.isEmpty()){
+        if (cartList.isEmpty()) {
             response.getWriter().write("您的购物车当前为空，无法提交订单");
             return;
         }
@@ -114,7 +117,10 @@ public class OrderServlet extends BaseServlet {
             goodsService.updateCount(cart);
         }
 
-        cartService.deleteByUserId(userId);
+        //通过buyNowFlag判断是商品详情页中的“立即购买”，还是购物车中的“提交订单”
+        if ("0".equals(buyNowFlag)) {
+            cartService.deleteByUserId(userId);
+        }
         response.getWriter().write("提交订单成功");
     }
 

@@ -127,7 +127,7 @@
             },
             // 提交订单
             addOrder() {
-                axios.post('http://localhost:8080/shopping/order/submitUserOrders', {
+                axios.post('http://localhost:8080/shopping/order/submitUserOrders?buyNowFlag=0', {
                     totalPrice: this.totalPrice,
                     cartList: this.carts
                 })

@@ -37,7 +37,7 @@
                     <input type="number" @blur="checkCount" v-model="cart.count" :min="minCount" :max="goods.number">
                 </div>
                 <div class="item btns">
-                    <button class="pay btn">立即购买</button>
+                    <button class="pay btn" @click="buyNow">立即购买</button>
                     <button class="addToCart btn" @click="addToCart">加入购物车</button>
                     <button class="showCart btn" @click="gotoCart">查询购物车</button>
                 </div>
@@ -71,7 +71,8 @@
             return {
                 cart: {
                     goodsId: null,
-                    count: null
+                    count: null,
+                    price:null
                 },
                 minCount: 1,  // 购买数量下限
                 isActive: false,
@@ -102,6 +103,7 @@
                     // 保存到浏览器本地
                     localStorage.setItem('looked', JSON.stringify(looked))
 
+                    this.cart.price=this.goods.price;
                     if (this.goods.number == 0) {
                         this.cart.count = 0;    //购买数量初始值
                         this.minCount = 0;
@@ -112,6 +114,40 @@
                 })
         },
         methods: {
+            buyNow() {
+                if (this.goods.number == 0) {
+                    this.showMessage('商品库存不足，购买商品失败');
+                }
+                // 购买数量不是整数时，不进行添加到购物车的操作
+                else if (!Number.isInteger(this.cart.count)) {
+                    this.showMessage('购买数量必须为整数');
+                } else {
+                    // 创建一个只包含当前商品的数组(即购物车列表)
+                    let singleCartList = [this.cart];
+                    // 发送POST请求，提交订单
+                    axios.post('http://localhost:8080/shopping/order/submitUserOrders?buyNowFlag=1', {
+                        totalPrice: this.goods.price * this.cart.count,
+                        cartList: singleCartList
+                    })
+                        .then(response => {
+                            if (response.data === '提交订单成功') {
+                                this.goods.number -= this.cart.count;
+                                //根据商品库存，初始化购买数量和购买数量最小值
+                                if (this.goods.number == 0) {
+                                    this.cart.count = 0;    //购买数量初始值
+                                    this.minCount = 0;
+                                } else {
+                                    this.cart.count = 1;    //购买数量初始值
+                                    this.minCount = 1;
+                                }
+                                this.showMessage("购买商品成功");
+                            } else {
+                                this.showMessage("商品库存不足，购买商品失败，请重新刷新页面");
+                            }
+                        })
+                }
+
+            },
             checkCount() {
                 this.cart.count = Number(this.cart.count);
                 // 当商品库存为0时，购买数量应始终为0
