@@ -38,7 +38,7 @@
                 </div>
                 <div class="item">
                     <span>购买数量：</span>
-                    <input type="number" @blur="checkCount" v-model="cart.count" :min="minCount" :max="goods.number">
+                    <input type="number" name="number" @blur="checkCount" v-model="cart.count" :min="minCount" :max="goods.number">
                 </div>
                 <div class="item btns">
                     <button class="pay btn" @click="buyNow">立即购买</button>
