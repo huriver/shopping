@@ -1,10 +1,15 @@
 package com.ahut.pojo;
 
 public class Order {
+    // 订单ID
     private int id;
+    // 订单编号
     private String orderId;
+    // 订单总价
     private int totalPrice;
+    // 用户ID
     private int userId;
+    // 订单状态
     private int state;
 
     public int getId() {

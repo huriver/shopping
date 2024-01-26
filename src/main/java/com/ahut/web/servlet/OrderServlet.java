@@ -26,15 +26,8 @@ public class OrderServlet extends BaseServlet {
     private OrderItemService orderItemService = new OrderItemServiceImpl();
     private CartService cartService = new CartServiceImpl();
 
-    /**
-     * 展示用户订单
-     *
-     * @param request
-     * @param response
-     * @throws Exception
-     */
+    //展示用户订单
     public void showUserOrders(HttpServletRequest request, HttpServletResponse response) throws Exception {
-//        判断用户是否登录：如果还没登录，则转向登录页面
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
         response.setContentType("text/json;charset=UTF-8");
@@ -45,20 +38,14 @@ public class OrderServlet extends BaseServlet {
         response.getWriter().write(jsonString);
     }
 
-    /**
-     * 提交用户订单
-     *
-     * @param request
-     * @param response
-     * @throws Exception
-     */
+    //提交用户订单
     public synchronized void submitUserOrders(HttpServletRequest request, HttpServletResponse response) throws Exception {
-
         HttpSession session = request.getSession();
         //获取buyNowFlag标志
         String buyNowFlag = request.getParameter("buyNowFlag");
 
         User user = (User) session.getAttribute("user");
+        //初始化购物车无效invalid标志为false
         boolean invalid = false;
         String invalidGoods = "";
 
@@ -95,10 +82,11 @@ public class OrderServlet extends BaseServlet {
         }
 
         int totalPrice = orderDTO.getTotalPrice();
-        String orderId = IdUtils.genId();//自动生成：订单号
+        //自动生成：订单号
+        String orderId = IdUtils.genId();
         int userId = user.getId();
 
-        Order order = new Order();//订单
+        Order order = new Order();
         order.setOrderId(orderId);
         order.setTotalPrice(totalPrice);
         order.setUserId(userId);
@@ -123,6 +111,5 @@ public class OrderServlet extends BaseServlet {
         }
         response.getWriter().write("提交订单成功");
     }
-
 
 }

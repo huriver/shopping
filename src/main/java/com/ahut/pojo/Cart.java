@@ -1,12 +1,19 @@
 package com.ahut.pojo;
 
 public class Cart {
+    // 购物车ID
     private int cartId;
+    // 商品ID
     private int goodsId;
+    // 商品购买数量
     private int count;
+    // 用户ID
     private int userId;
+    // 商品名称
     private String name;
+    // 商品价格
     private int price;
+    // 商品图片
     private String picture;
 
     public int getCartId() {

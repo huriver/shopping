@@ -2,24 +2,27 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 定义订单相关数据库操作的映射文件 -->
 <mapper namespace="com.ahut.mapper.OrderMapper">
 
+    <!-- 定义结果映射，将数据库字段映射到Order对象的属性 -->
     <resultMap id="orderResultMap" type="order">
         <result column="order_id" property="orderId"/>
         <result column="total_price" property="totalPrice"/>
         <result column="user_id" property="userId"/>
     </resultMap>
 
+    <!-- 根据用户ID查询该用户的所有订单 -->
     <select id="selectByUserId" resultMap="orderResultMap">
         select *
         from `order`
         where user_id = #{id};
     </select>
 
+    <!-- 向订单表中添加一条记录，返回插入的行数 -->
     <insert id="add" useGeneratedKeys="true" keyProperty="id">
         insert into `order` (order_id, total_price, user_id, state)
         values (#{orderId}, #{totalPrice}, #{userId}, #{state});
     </insert>
-
 
 </mapper>

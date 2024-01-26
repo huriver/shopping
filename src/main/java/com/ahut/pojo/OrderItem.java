@@ -1,13 +1,21 @@
 package com.ahut.pojo;
 
 public class OrderItem {
+    // 订单详情项ID
     private int id;
+    // 所属订单ID
     private int orderId;
+    // 商品ID
     private int goodsId;
+    // 商品数量
     private int count;
+    // 订单详情项总价
     private int totalPrice;
+    // 商品名称
     private String name;
+    // 商品价格
     private int price;
+    // 商品图片
     private String picture;
 
     public String getName() {

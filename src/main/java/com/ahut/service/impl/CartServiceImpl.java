@@ -10,8 +10,10 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import java.util.List;
 
 public class CartServiceImpl implements CartService {
+    // 获取SqlSessionFactory实例
     SqlSessionFactory sqlSessionFactory = SqlSessionFactoryUtils.getSqlSessionFactory();
 
+    // 通过用户ID查询所有购物车项
     @Override
     public List<Cart> selectAll(int id) {
         SqlSession sqlSession = sqlSessionFactory.openSession();
@@ -23,6 +25,7 @@ public class CartServiceImpl implements CartService {
         return cartList;
     }
 
+    // 添加购物车项
     @Override
     public void add(Cart cart) {
         SqlSession sqlSession = sqlSessionFactory.openSession();
@@ -33,6 +36,7 @@ public class CartServiceImpl implements CartService {
         sqlSession.close();
     }
 
+    // 通过购物车ID删除购物车项
     @Override
     public void delete(int cartId) {
         SqlSession sqlSession = sqlSessionFactory.openSession();
@@ -43,6 +47,7 @@ public class CartServiceImpl implements CartService {
         sqlSession.close();
     }
 
+    // 通过用户ID删除所有购物车项
     @Override
     public void deleteByUserId(int userId) {
         SqlSession sqlSession = sqlSessionFactory.openSession();
@@ -53,6 +58,7 @@ public class CartServiceImpl implements CartService {
         sqlSession.close();
     }
 
+    // 更新购物车项的商品数量
     @Override
     public void update(Cart cart) {
         SqlSession sqlSession = sqlSessionFactory.openSession();

@@ -3,9 +3,8 @@ package com.ahut.util;
 import java.util.Random;
 
 public class IdUtils {
-    /**
-     * orders订单orderId生成
-     */
+
+    //orders订单orderId生成
     public static String genId() {
         //取当前时间的长整形值包含毫秒
         long millis = System.currentTimeMillis();

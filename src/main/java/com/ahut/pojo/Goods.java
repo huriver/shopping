@@ -3,12 +3,18 @@ package com.ahut.pojo;
 import java.util.Objects;
 
 public class Goods {
-    private int id; // 商品编号
-    private String name; // 商品名称
-    private String city; // 产地
-    private int price; // 价格
-    private int number; // 库存
-    private String picture; // 商品图片
+    // 商品ID
+    private int id;
+    // 商品名称
+    private String name;
+    // 商品产地
+    private String city;
+    // 商品价格
+    private int price;
+    // 商品库存
+    private int number;
+    // 商品图片
+    private String picture;
 
     public int getId() {
         return id;

@@ -118,6 +118,7 @@
                 })
         },
         methods: {
+            //立即购买
             buyNow() {
                 if (this.goods.number == 0) {
                     this.showMessage('商品库存不足，购买商品失败');
@@ -152,6 +153,7 @@
                 }
 
             },
+            //检查购买数量
             checkCount() {
                 this.cart.count = Number(this.cart.count);
                 // 当商品库存为0时，购买数量应始终为0
@@ -165,9 +167,11 @@
                     this.cart.count = this.goods.number;
                 }
             },
+            //查询购物车
             gotoCart() {
                 location.href = 'http://localhost:8080/shopping/cart.html'
             },
+            //加入购物车
             addToCart() {
                 if (this.goods.number == 0) {
                     this.showMessage('商品库存不足，无法加入购物车');
@@ -192,6 +196,7 @@
             }
         }
     })
+
 </script>
 </body>
 

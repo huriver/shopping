@@ -13,12 +13,14 @@ import java.io.IOException;
 
 @WebServlet("/checkCodeServlet")
 public class CheckCodeServlet extends HttpServlet {
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         ServletOutputStream outputStream = response.getOutputStream();
+        // 生成并输出验证码图片，返回生成的验证码
         String checkCode = CheckCodeUtil.outputVerifyImage(100, 50, outputStream, 4);
-        System.out.println(checkCode);
+        // 将生成的验证码存入session
         session.setAttribute("checkCodeGen", checkCode);
     }
 
@@ -26,4 +28,5 @@ public class CheckCodeServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         this.doGet(request, response);
     }
+
 }

@@ -1,10 +1,15 @@
 package com.ahut.pojo.dto;
 
 public class UserDTO {
+    //用户id
     private int id;
+    //用户名
     private String username;
+    //密码
     private String password;
+    //勾选记住我
     private int remember;
+    //用户填写的验证码
     private String checkCode;
 
     public int getId() {

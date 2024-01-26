@@ -73,6 +73,7 @@
             document.getElementById("changeCodeImg").src = "/shopping/checkCodeServlet?" + new Date().getMilliseconds();
         },
         methods: {
+            //用户注册
             register() {
                 axios.post("/shopping/user/register", {
                     username: this.username,
@@ -91,15 +92,18 @@
                         console.error('注册过程中的错误:', error);
                     });
             },
+            //改变验证码
             changeCode() {
                 document.getElementById("changeCodeImg").src = "/shopping/checkCodeServlet?" + new Date().getMilliseconds();
             },
+            //检查用户名是否存在
             checkUsernameExists() {
                 axios.get("/shopping/user/selectByUsername?username=" + this.username)
                     .then(response => {
                         this.registerMsg = response.data;
                     })
             },
+            //检查密码是否存在
             checkPasswordExists() {
                 if (this.password === "") {
                     this.passwordMsg = "密码不能为空";
@@ -109,6 +113,7 @@
             }
         }
     });
+
 </script>
 </body>
 

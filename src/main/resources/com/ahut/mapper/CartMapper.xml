@@ -2,14 +2,17 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 定义购物车相关数据库操作的映射文件 -->
 <mapper namespace="com.ahut.mapper.CartMapper">
 
+    <!-- 定义结果映射，将数据库字段映射到Cart对象的属性 -->
     <resultMap id="cartResultMap" type="cart">
         <result column="goods_id" property="goodsId"/>
         <result column="cart_id" property="cartId"/>
         <result column="user_id" property="userId"/>
     </resultMap>
 
+    <!-- 查询指定用户的所有购物车商品，包括商品的名称、价格和图片 -->
     <select id="selectAll" resultMap="cartResultMap">
         select c.* ,g.name as name, g.price as price,g.picture as picture
         from cart as c left join goods g on g.id = c.goods_id

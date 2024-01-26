@@ -1,11 +1,11 @@
 package com.ahut.pojo;
 
-/**
- * 用户实体类
- */
 public class User {
+    // 用户ID
     private int id;
+    // 用户名
     private String username;
+    // 密码
     private String password;
 
 

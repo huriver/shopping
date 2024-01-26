@@ -5,7 +5,9 @@ import com.ahut.pojo.Cart;
 import java.util.List;
 
 public class OrderDTO {
+    //订单总价格
     private int totalPrice;
+    //订单内购物车列表项
     private List<Cart> cartList;
 
     public int getTotalPrice() {
